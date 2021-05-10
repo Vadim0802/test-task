@@ -101,7 +101,7 @@ export default {
   watch: {
     sortType(value) {
       const type = typeof this.users[0][value];
-      this.users = sort(value, type, this.users);
+      this.users = sort(value, type)(this.users);
     },
   },
 };

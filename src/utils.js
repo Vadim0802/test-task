@@ -1,4 +1,4 @@
-export const sort = (sortingField, typeField, data) => {
+export const sort = (sortingField, typeField) => {
   const actions = {
     string: (data) => {
       return [
@@ -16,5 +16,5 @@ export const sort = (sortingField, typeField, data) => {
     },
   };
 
-  return actions[typeField](data);
+  return actions[typeField];
 };
