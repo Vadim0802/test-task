@@ -5,7 +5,7 @@ export const getUsers = (REQUEST_URL) => {
     const { results, next } = await fetch(url).then((res) => res.json());
     USERS.push(
       ...results.map(({ name, height, mass, created }) => {
-        const date = new Date(created).toDateString();
+        const date = new Date(created);
         return { name, height, mass, created: date };
       })
     );

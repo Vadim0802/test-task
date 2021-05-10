@@ -1,15 +1,29 @@
 <template>
   <div class="d-flex justify-content-between">
-    <div>
-      <label class="h4" for="per-page">Per page</label>
-      <select
-        id="per-page"
-        class="form-select mb-3"
-        aria-label="Default select example"
-        v-model.number="perPage"
-      >
-        <option v-for="n in 9" :key="n" :value="n">{{ n }}</option>
-      </select>
+    <div class="d-flex justify-content-start">
+      <div class="me-4">
+        <label class="h4" for="per-page">Per page</label>
+        <select
+          id="per-page"
+          class="form-select mb-3"
+          aria-label="Default select example"
+          v-model.number="perPage"
+        >
+          <option v-for="n in 9" :key="n" :value="n">{{ n }}</option>
+        </select>
+      </div>
+      <div class="me-4">
+        <label class="h4" for="sort">Sort</label>
+        <select
+          id="sort"
+          class="form-select mb-3"
+          aria-label="Default select example"
+          v-model="sortType"
+        >
+          <option value="name">Name</option>
+          <option value="created">Created</option>
+        </select>
+      </div>
     </div>
     <app-pagination
       :tableRowsCounter="users.length"
@@ -34,7 +48,7 @@
         <td>{{ item.name }}</td>
         <td>{{ item.height }}</td>
         <td>{{ item.mass }}</td>
-        <td>{{ item.created }}</td>
+        <td>{{ item.created.toDateString() }}</td>
       </tr>
     </tbody>
   </table>
@@ -43,6 +57,7 @@
 <script>
 import AppPagination from "./AppPagination.vue";
 import { getUsers } from "../api.js";
+import { sort } from "../utils.js";
 
 export default {
   components: {
@@ -54,6 +69,7 @@ export default {
       users: [],
       perPage: 9,
       currentPage: 1,
+      sortType: "",
     };
   },
 
@@ -79,6 +95,13 @@ export default {
 
     currentBeginIndexesOfPage() {
       return this.perPage * this.currentPage - this.perPage;
+    },
+  },
+
+  watch: {
+    sortType(value) {
+      const type = typeof this.users[0][value];
+      this.users = sort(value, type, this.users);
     },
   },
 };
