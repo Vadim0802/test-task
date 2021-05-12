@@ -1,13 +1,13 @@
 <template>
-  <the-table></the-table>
+  <v-table></v-table>
 </template>
 
 <script>
-import TheTable from "./components/TheTable.vue";
+import VTable from "./components/VTable.vue";
 
 export default {
   components: {
-    TheTable,
+    VTable,
   },
 };
 </script>

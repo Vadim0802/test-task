@@ -24,13 +24,15 @@
           <option value="created">Created</option>
         </select>
       </div>
+      <v-table-search v-model="form"></v-table-search>
     </div>
-    <app-pagination
+    <v-pagination
       :tableRowsCounter="users.length"
       :perPage="perPage"
       :currentPage="currentPage"
       @change-page="changePage"
-    ></app-pagination>
+      v-if="users.length !== 0"
+    ></v-pagination>
   </div>
   <table class="table table-striped">
     <thead class="table-dark">
@@ -55,13 +57,15 @@
 </template>
 
 <script>
-import AppPagination from "./AppPagination.vue";
+import VPagination from "./VPagination.vue";
+import VTableSearch from "./VTableSearch.vue";
 import { getUsers } from "../api.js";
 import { sort } from "../utils.js";
 
 export default {
   components: {
-    AppPagination,
+    VPagination,
+    VTableSearch,
   },
 
   data() {
@@ -70,6 +74,10 @@ export default {
       perPage: 9,
       currentPage: 1,
       sortType: "",
+      form: {
+        typeOfSearchField: "",
+        searchString: "",
+      },
     };
   },
 
@@ -86,6 +94,14 @@ export default {
   },
 
   computed: {
+    filteredUsers() {
+      return this.users.filter((user) => {
+        return user[this.form.typeOfSearchField].includes(
+          this.form.searchString
+        );
+      });
+    },
+
     usersOnPage() {
       const begin = this.perPage * this.currentPage - this.perPage;
       const end = this.perPage * this.currentPage;
