@@ -70,8 +70,8 @@ export default {
   computed: {
     maxPages() {
       return (
-        this.tableRowsCounter / this.perPage +
-        (this.tableRowsCounter % this.perPage === 0)
+        Math.floor(this.tableRowsCounter / this.perPage) +
+        (this.tableRowsCounter % this.perPage === 0 ? 0 : 1)
       );
     },
 

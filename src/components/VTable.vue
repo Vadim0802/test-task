@@ -24,10 +24,10 @@
           <option value="created">Created</option>
         </select>
       </div>
-      <v-table-search v-model="form"></v-table-search>
+      <v-table-search v-model="filters"></v-table-search>
     </div>
     <v-pagination
-      :tableRowsCounter="users.length"
+      :tableRowsCounter="filteredUsers.length"
       :perPage="perPage"
       :currentPage="currentPage"
       @change-page="changePage"
@@ -74,7 +74,7 @@ export default {
       perPage: 9,
       currentPage: 1,
       sortType: "",
-      form: {
+      filters: {
         typeOfSearchField: "",
         searchString: "",
       },
@@ -95,9 +95,12 @@ export default {
 
   computed: {
     filteredUsers() {
+      if (!this.filters.typeOfSearchField) {
+        return this.users;
+      }
       return this.users.filter((user) => {
-        return user[this.form.typeOfSearchField].includes(
-          this.form.searchString
+        return user[this.filters.typeOfSearchField].includes(
+          this.filters.searchString
         );
       });
     },
@@ -106,7 +109,7 @@ export default {
       const begin = this.perPage * this.currentPage - this.perPage;
       const end = this.perPage * this.currentPage;
 
-      return this.users.slice(begin, end);
+      return this.filteredUsers.slice(begin, end);
     },
 
     currentBeginIndexesOfPage() {
@@ -118,6 +121,12 @@ export default {
     sortType(value) {
       const type = typeof this.users[0][value];
       this.users = sort(value, type)(this.users);
+    },
+
+    filters(value, oldValue) {
+      if (value.searchString !== oldValue.searchString) {
+        this.currentPage = 1;
+      }
     },
   },
 };
